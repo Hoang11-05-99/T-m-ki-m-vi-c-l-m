@@ -10,6 +10,12 @@ export enum Sex {
   'Nữ',
 }
 
+export enum Marry {
+  none,
+  'Độc thân',
+  'Đã kết hôn',
+}
+
 export enum Status {
   'Chưa phê duyệt',
   'Đã phê duyệt',

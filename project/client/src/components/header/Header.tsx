@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
-  BellOutlined,
   CaretDownOutlined,
   CaretUpOutlined,
   KeyOutlined,
@@ -24,10 +23,7 @@ import {
   setStatusAuth,
   setToken,
 } from "../../redux/reducers/auth.reducer";
-import {
-  profileSelectors,
-  setProfile,
-} from "../../redux/reducers/profile.reducer";
+import { setProfile } from "../../redux/reducers/profile.reducer";
 import { removeAccessToken } from "../../untils/localStorageService";
 const Wrapper = styled.div`
   height: 80px;
@@ -63,9 +59,10 @@ const NavLeft = styled.div`
     margin: 16px 5px;
     padding: 13px 10px;
     cursor: pointer;
+
     :hover {
-      color: #00b14f;
-      background-color: #eee;
+      color: #fff;
+      background-image: linear-gradient(to bottom, #0071ff, #0130cb);
     }
   }
 `;
@@ -73,15 +70,15 @@ const NavLeft = styled.div`
 const NavRight = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-around;
-  width: 18%;
+  justify-content: space-between;
   span {
     color: #333;
     font-size: 14px;
     font-weight: 600;
     white-space: nowrap;
+    cursor: pointer;
     :hover {
-      color: #00b14f;
+      color: #0130cb;
     }
   }
   div {
@@ -106,8 +103,7 @@ const ButtonRight = styled.div`
   letter-spacing: 0.235px;
   margin: 16px 5px;
   padding: 13px 10px;
-  border: 1px solid #00b14f;
-  color: #00b14f;
+  color: #0130cb;
   cursor: pointer;
 `;
 const Test = () => {
@@ -115,10 +111,18 @@ const Test = () => {
   const navigate = useNavigate();
   const [isShowIcon, setIsShowIcon] = useState(false);
   const account = useAppSelector(authSelectors.getAccountSelector);
-  const profile = useAppSelector(profileSelectors.getProfileSelector);
+  console.log(account);
+  
   const content = (
     <DropDown>
-      <StyledButton icon={<KeyOutlined />}>Đổi mật khẩu</StyledButton>
+      <StyledButton
+        icon={<KeyOutlined />}
+        onClick={() => {
+          navigate("/updatePass");
+        }}
+      >
+        Đổi mật khẩu
+      </StyledButton>
       <StyledButton
         icon={<LogoutOutlined />}
         onClick={() => {
@@ -139,7 +143,7 @@ const Test = () => {
 
   useLayoutEffect(() => {
     dispatch(getAccountAction());
-  }, []);
+  }, [account?.passWord]);
 
   return (
     <Wrapper>
@@ -204,40 +208,87 @@ const Test = () => {
           <div>Công cụ</div>
         </NavLeft>
         {account ? (
-          <NavRight>
+          <NavRight
+            style={{
+              width: `${
+                account?.role === Role.ADMIN
+                  ? "18%"
+                  : account?.role === Role.RECRUITER
+                  ? "28%"
+                  : account?.role === Role.CANDIDATE
+                  ? "22%"
+                  : null
+              }`,
+            }}
+          >
             <MessageOutlined
-              style={{ fontSize: "25px", color: "#00b14f", cursor: "pointer" }}
+              style={{ fontSize: "25px", color: "#0130CB", cursor: "pointer" }}
             />
-            <BellOutlined
-              style={{ fontSize: "25px", color: "#00b14f", cursor: "pointer" }}
-            />
-
-            {profile?.imgUrl ? (
-              <Avatar size="default" src={profile.imgUrl} />
-            ) : (
-              <Avatar
-                size="default"
-                icon={<UserOutlined style={{ fontSize: "20px" }} />}
-              />
-            )}
-            <Popover placement="bottom" content={content} trigger="click">
-              <div
-                style={{ cursor: "pointer" }}
-                onClick={() => {
-                  setIsShowIcon(!isShowIcon);
+            <div
+              style={{
+                border: "1px solid #0130CB ",
+                padding: "5px",
+                borderRadius: "30px",
+              }}
+            >
+              {account?.imgUrl ? (
+                <Avatar size="default" src={account.imgUrl} />
+              ) : (
+                <Avatar
+                  size="default"
+                  icon={<UserOutlined style={{ fontSize: "20px" }} />}
+                />
+              )}
+              <Popover placement="bottom" content={content} trigger="click">
+                <div
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setIsShowIcon(!isShowIcon);
+                  }}
+                >
+                  <span>{account?.userName}</span>
+                  {isShowIcon ? (
+                    <CaretDownOutlined style={{ color: "black" }} />
+                  ) : (
+                    <CaretUpOutlined style={{ color: "black" }} />
+                  )}
+                </div>
+              </Popover>
+            </div>
+            {account?.role === Role.CANDIDATE ? (
+              <span
+                style={{
+                  borderLeft: "1px solid #333",
+                  paddingLeft: "5px",
+                  // whiteSpace: "nowrap",
                 }}
               >
-                <span>{account?.userName}</span>
-                {isShowIcon ? (
-                  <CaretDownOutlined style={{ color: "black" }} />
-                ) : (
-                  <CaretUpOutlined style={{ color: "black" }} />
-                )}
-              </div>
-            </Popover>
+                Ứng viên
+              </span>
+            ) : account?.role === Role.RECRUITER ? (
+              <span
+                style={{
+                  borderLeft: "1px solid #333",
+                  paddingLeft: "5px",
+                  // whiteSpace: "nowrap",
+                }}
+              >
+                Nhà tuyển dụng
+              </span>
+            ) : (
+              <span
+                style={{
+                  borderLeft: "1px solid #333",
+                  paddingLeft: "5px",
+                  // whiteSpace: "nowrap",
+                }}
+              >
+                Admin
+              </span>
+            )}
           </NavRight>
         ) : (
-          <NavRight>
+          <NavRight style={{ justifyContent: "space-around", width: "18%" }}>
             <ButtonRight
               onClick={() => {
                 navigate("/login");
@@ -247,7 +298,7 @@ const Test = () => {
             </ButtonRight>
             <ButtonRight
               style={{
-                backgroundColor: "#00b14f",
+                backgroundImage: "linear-gradient(to bottom, #0071FF, #0130CB)",
                 color: "#fff",
                 marginRight: "30px",
               }}

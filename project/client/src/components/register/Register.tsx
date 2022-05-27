@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Button, Form, Input, Select } from "antd";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import styled from "styled-components";
@@ -13,6 +13,7 @@ import {
   setMessageAuth,
   setStatusAuth,
 } from "../../redux/reducers/auth.reducer";
+import UploadImage from "../upload/UploadImg";
 
 const { Option } = Select;
 
@@ -32,11 +33,23 @@ const Title = styled.h1`
 const Register: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [imageUrl, setImageUrl] = useState("");
   const status = useAppSelector(authSelectors.isStatusSelector);
   const messageRegister = useAppSelector(authSelectors.isMessageSelector);
 
-  const onFinish = ({ email, passWord, role, userName }: IRegisterRequest) => {
-    dispatch(registerAction({ email, passWord, role, userName }));
+  const onFinish = async ({
+    email,
+    passWord,
+    role,
+    userName,
+    imgUrl,
+  }: IRegisterRequest) => {
+    try {
+      imgUrl = imageUrl;
+      dispatch(registerAction({ email, passWord, role, userName, imgUrl }));
+    } catch (error) {
+      toast.error("Có lỗi xảy ra");
+    }
   };
 
   useEffect(() => {
@@ -101,6 +114,9 @@ const Register: React.FC = () => {
           rules={[{ required: true, min: 6, message: "Tối thiểu 6 kí tự!" }]}
         >
           <Input.Password />
+        </Form.Item>
+        <Form.Item label="Hình ảnh" name="imgUrl">
+          <UploadImage imageUrl={imageUrl!} setImageUrl={setImageUrl} />
         </Form.Item>
         <Form.Item wrapperCol={{ offset: 8, span: 8 }}>
           <Button type="primary" htmlType="submit">

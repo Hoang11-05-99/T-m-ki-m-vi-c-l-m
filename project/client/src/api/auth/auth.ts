@@ -2,6 +2,7 @@ import { getApi, postApi } from "../../untils/apiHelper";
 import {
   IAuthRequest,
   IAuthResponse,
+  IAuthUpdatePass,
   IGetAccountResponse,
   IGetAllAccountResponse,
   IRegisterRequest,
@@ -16,10 +17,22 @@ export const loginApi = async ({ email, passWord }: IAuthRequest) => {
   return data;
 };
 
+export const updatePassApi = async ({ oldPass, newPass }: IAuthUpdatePass) => {
+  const data = await postApi<IAuthUpdatePass, IRegisterResponse>(
+    `/auth/updatePass`,
+    {
+      newPass,
+      oldPass,
+    }
+  );
+  return data;
+};
+
 export const RegisterApi = async ({
   email,
   passWord,
   userName,
+  imgUrl,
   role,
 }: IRegisterRequest) => {
   const data = await postApi<IRegisterRequest, IRegisterResponse>(
@@ -27,6 +40,7 @@ export const RegisterApi = async ({
     {
       email,
       passWord,
+      imgUrl,
       userName,
       role,
     }
@@ -50,4 +64,3 @@ export const updateStatusAccountApi = async (id: string) => {
   );
   return data;
 };
-

@@ -5,10 +5,16 @@ export interface IAuthRequest {
   passWord: string;
 }
 
+export interface IAuthUpdatePass {
+  oldPass: string;
+  newPass: string;
+}
+
 export interface IRegisterRequest {
   email: string;
   userName: string;
   passWord: string;
+  imgUrl: string;
   role: Role;
 }
 
@@ -33,6 +39,7 @@ export interface Account {
   email: string;
   userName: string;
   passWord: string;
+  imgUrl: string;
   role: Role;
   status: boolean;
   createdAt?: Date;

@@ -18,6 +18,7 @@ import { ToastContainer } from "react-toastify";
 import Header from "./components/header/Header";
 import ManagerRecruitment from "./components/manager/ManagerRecruitment";
 import ManagerAccount from "./components/manager/ManagerAccount";
+import UpdatePass from "./components/updatePass/UpdatePass";
 
 function Root() {
   function App({ children }: any) {
@@ -64,6 +65,14 @@ function Root() {
         element={
           <App>
             <Register />
+          </App>
+        }
+      />
+      <Route
+        path="/updatePass"
+        element={
+          <App>
+            <UpdatePass />
           </App>
         }
       />
@@ -115,14 +124,14 @@ function Root() {
           </App>
         }
       />
-        <Route
-          path="/recruitment/update/:id"
-          element={
-            <App>
-              <UpdateRecruitment />
-            </App>
-          }
-        />
+      <Route
+        path="/recruitment/update/:id"
+        element={
+          <App>
+            <UpdateRecruitment />
+          </App>
+        }
+      />
       <Route
         path="/recruitment/warning"
         element={

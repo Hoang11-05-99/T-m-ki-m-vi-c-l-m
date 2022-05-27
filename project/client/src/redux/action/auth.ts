@@ -4,11 +4,13 @@ import {
   getAllAccountApi,
   loginApi,
   RegisterApi,
+  updatePassApi,
   updateStatusAccountApi,
 } from "../../api/auth/auth";
 import {
   IAuthRequest,
   IAuthResponse,
+  IAuthUpdatePass,
   IRegisterRequest,
   IRegisterResponse,
 } from "../../api/type/auth";
@@ -20,6 +22,14 @@ export const loginAction = createAsyncThunk<IAuthResponse, IAuthRequest>(
     return response;
   }
 );
+
+export const updatePassAction = createAsyncThunk<
+  IRegisterResponse,
+  IAuthUpdatePass
+>("auth/updatePass", async (data: IAuthUpdatePass) => {
+  const response = { ...(await updatePassApi(data)) };
+  return response;
+});
 
 export const registerAction = createAsyncThunk<
   IRegisterResponse,

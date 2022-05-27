@@ -34,12 +34,21 @@ const UpdateProfile: React.FC = () => {
   const [imageUrl, setImageUrl] = useState(profile?.imgUrl!);
 
   const onFinish = ({
-    degree,
     email,
     birthday,
     experience,
     gender,
-    hobby,
+    address,
+    branch,
+    branchWant,
+    endDay,
+    firstDay,
+    language,
+    marry,
+    rank,
+    salary,
+    schoolName,
+    workForm,
     imgUrl,
     name,
     phone,
@@ -50,12 +59,21 @@ const UpdateProfile: React.FC = () => {
     dispatch(
       updateProfileAction({
         birthday,
-        degree,
         email,
         experience,
         gender,
+        address,
+        branch,
+        branchWant,
+        endDay,
+        firstDay,
+        language,
+        marry,
+        rank,
+        salary,
+        schoolName,
+        workForm,
         imgUrl,
-        hobby,
         name,
         phone,
         skill,
@@ -96,10 +114,8 @@ const UpdateProfile: React.FC = () => {
           { name: ["name"], value: profile?.name },
           { name: ["email"], value: profile?.email },
           { name: ["phone"], value: profile?.phone },
-          { name: ["hobby"], value: profile?.hobby },
           { name: ["skill"], value: profile?.skill },
           { name: ["gender"], value: profile?.gender },
-          { name: ["degree"], value: profile?.degree },
           { name: ["target"], value: profile?.target },
           {
             name: ["birthday"],
@@ -141,10 +157,7 @@ const UpdateProfile: React.FC = () => {
         <Form.Item label="Mục tiêu" name="target">
           <Input />
         </Form.Item>
-        <Form.Item
-          label="Hình ảnh"
-          name="imgUrl"
-        >
+        <Form.Item label="Hình ảnh" name="imgUrl">
           <UploadImage imageUrl={imageUrl!} setImageUrl={setImageUrl} />
         </Form.Item>
         <Form.Item wrapperCol={{ offset: 8, span: 8 }}>

@@ -5,6 +5,7 @@ import {
   getAllAccountAction,
   loginAction,
   registerAction,
+  updatePassAction,
   updateStatusAction,
 } from "../action/auth";
 import { IAuthState } from "../interface/auth";
@@ -55,6 +56,20 @@ const authSlice = createSlice({
         setAccessToken(action.payload.result);
       })
       .addCase(loginAction.rejected, (state, action) => {
+        state.loading = false;
+        state.message = action.payload as string;
+      });
+    builder
+      .addCase(updatePassAction.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updatePassAction.fulfilled, (state, action) => {
+        state.loading = false;
+        state.account = action.payload.result;
+        state.status = action.payload.status;
+        state.message = action.payload.message;
+      })
+      .addCase(updatePassAction.rejected, (state, action) => {
         state.loading = false;
         state.message = action.payload as string;
       });

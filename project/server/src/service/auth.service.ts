@@ -202,6 +202,56 @@ export class AuthService {
     }
   }
 
+  async updatePassWord(userId: string, oldPass: string, newPass: string) {
+    const findAccount = await this.accountModel.findOne({ _id: userId });
+    if (findAccount) {
+      const isValidPassword = await bcrypt.compare(
+        oldPass,
+        findAccount.passWord,
+      );
+      if (!isValidPassword)
+        throw new HttpException(
+          {
+            result: null,
+            status: HttpStatus.BAD_REQUEST,
+            message: 'Mật khẩu cũ không đúng !!!',
+          },
+          HttpStatus.OK,
+        );
+      if (oldPass === newPass)
+        throw new HttpException(
+          {
+            result: null,
+            status: HttpStatus.BAD_REQUEST,
+            message: 'Mật khẩu mới trùng lặp mặt khẩu cũ !!!',
+          },
+          HttpStatus.OK,
+        );
+      const hashedPassword = await this.hashPassword(newPass);
+      await this.accountModel.updateOne(
+        { _id: userId },
+        { passWord: hashedPassword },
+      );
+      throw new HttpException(
+        {
+          result: await this.accountModel.findOne({ _id: userId }),
+          status: HttpStatus.OK,
+          message: 'Cập nhật mật khẩu thành công',
+        },
+        HttpStatus.OK,
+      );
+    } else {
+      throw new HttpException(
+        {
+          result: null,
+          status: HttpStatus.NOT_FOUND,
+          message: 'Không tìm thấy tài khoản',
+        },
+        HttpStatus.OK,
+      );
+    }
+  }
+
   async send(email: string) {
     await this.mailService.sendMail({
       to: email,

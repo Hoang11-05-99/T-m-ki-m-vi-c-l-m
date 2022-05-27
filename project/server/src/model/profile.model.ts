@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types, Schema as MongooseSchema } from 'mongoose';
-import { Sex } from 'src/constant/enum';
+import { Marry, Rank, Salary, Sex, Type, WorkingForm } from 'src/constant/enum';
 
 export type ProfileDocument = Profile & Document;
 
@@ -8,6 +8,15 @@ export type ProfileDocument = Profile & Document;
 export class Profile {
   @Prop({ type: String, required: true })
   name: string;
+
+  @Prop({ type: String, required: true })
+  address: string;
+
+  @Prop({ type: String, required: true })
+  firstDay: string;
+
+  @Prop({ type: String, required: true })
+  endDay: string;
 
   @Prop({
     type: String,
@@ -36,7 +45,20 @@ export class Profile {
     type: String,
     required: true,
   })
-  degree: string;
+  schoolName: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    enum: Type,
+  })
+  branch: string;
+
+  @Prop({
+    type: String,
+    required: true,
+  })
+  language: string;
 
   @Prop({
     type: String,
@@ -54,12 +76,6 @@ export class Profile {
     type: String,
     required: true,
   })
-  hobby: string;
-
-  @Prop({
-    type: String,
-    required: true,
-  })
   target: string;
 
   @Prop({
@@ -68,6 +84,41 @@ export class Profile {
     enum: Sex,
   })
   gender: string;
+
+  @Prop({
+    required: true,
+    type: String,
+    enum: Marry,
+  })
+  marry: string;
+
+  @Prop({
+    required: true,
+    type: String,
+    enum: Salary,
+  })
+  salary: string;
+
+  @Prop({
+    required: true,
+    type: String,
+    enum: Rank,
+  })
+  rank: string;
+
+  @Prop({
+    required: true,
+    type: String,
+    enum: WorkingForm,
+  })
+  workForm: string;
+
+  @Prop({
+    required: true,
+    type: String,
+    enum: Type,
+  })
+  branchWant: string;
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Account' })
   account: Types.ObjectId;

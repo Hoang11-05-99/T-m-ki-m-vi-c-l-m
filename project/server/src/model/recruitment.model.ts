@@ -4,6 +4,7 @@ import {
   Address,
   Rank,
   Salary,
+  Sex,
   Status,
   Type,
   WorkExperience,
@@ -14,17 +15,21 @@ export type RecruitmentDocument = Recruitment & Document;
 
 @Schema()
 export class Recruitment {
+  @Prop({ type: String, required: true })
+  phone: string;
+
   @Prop({
     type: String,
     required: true,
-    unique: true,
-    lowercase: true,
-    trim: true,
   })
-  email: string;
+  degree: string;
 
-  @Prop({ type: String, required: true })
-  phone: string;
+  @Prop({
+    required: true,
+    type: String,
+    enum: Sex,
+  })
+  gender: string;
 
   @Prop({ required: true, default: null })
   salary: Salary;
@@ -57,16 +62,16 @@ export class Recruitment {
   title: string;
 
   @Prop({ type: String, required: true })
-  imgUrl: string;
-
-  @Prop({ type: String, required: true })
-  contact: string;
-
-  @Prop({ type: String, required: true })
   description: string;
 
   @Prop({ required: true, default: null })
   status: Status;
+
+  @Prop({
+    type: String,
+    required: true,
+  })
+  deadline: string;
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Account' })
   writer: Types.ObjectId;

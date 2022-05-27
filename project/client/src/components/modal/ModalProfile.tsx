@@ -157,7 +157,7 @@ const ModalProfile: React.FC<Props> = ({
               <p>sở thích</p>
             </ContentBox>
             <Description>
-              <TextDescription>{profile?.hobby}</TextDescription>
+              {/* <TextDescription>{profile?.hobby}</TextDescription> */}
             </Description>
           </Box>
         </ContentBlock>
@@ -168,7 +168,7 @@ const ModalProfile: React.FC<Props> = ({
               <p>Học vấn</p>
             </ContentBox>
             <Description>
-              <TextDescription>{profile?.degree}</TextDescription>
+              {/* <TextDescription>{profile?.degree}</TextDescription> */}
             </Description>
           </Box>
           <Box>

@@ -31,7 +31,9 @@ export class RecruitmentService {
 
   async findAllNotAccept(role: Role) {
     if (role === Role.ADMIN) {
-      const allRecruitment = await this.recruitmentModel.find({ status: 0 }).populate("writer");
+      const allRecruitment = await this.recruitmentModel
+        .find({ status: 0 })
+        .populate('writer');
       throw new HttpException(
         {
           result: allRecruitment,
@@ -99,16 +101,16 @@ export class RecruitmentService {
           HttpStatus.OK,
         );
       } else {
-        const findEmailRecruitment = await this.recruitmentModel.findOne({
+        const findExistsRecruitment = await this.recruitmentModel.findOne({
           writer: userId,
-          email: newRecruitment.email,
+          title: newRecruitment.title,
         });
-        if (findEmailRecruitment) {
+        if (findExistsRecruitment) {
           throw new HttpException(
             {
               result: null,
               status: HttpStatus.BAD_REQUEST,
-              message: 'Bài đăng có email tồn tại',
+              message: 'Đã có bài đăng có tiêu đề này rồi !!!',
             },
             HttpStatus.OK,
           );

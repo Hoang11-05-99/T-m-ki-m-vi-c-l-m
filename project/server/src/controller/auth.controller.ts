@@ -9,6 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { CreateAccountDTO } from 'src/dto/createAccountDto';
+import { UpdatePassDTO } from 'src/dto/updatePassDto';
 import { JwtAuthGuard } from 'src/guards/jwt.guard';
 import { AuthService } from 'src/service/auth.service';
 
@@ -27,6 +28,16 @@ export class AuthController {
   @Post('login')
   login(@Body() user: CreateAccountDTO) {
     return this.authService.login(user);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('updatePass')
+  updatePass(@Req() req, @Body() user: UpdatePassDTO) {
+    return this.authService.updatePassWord(
+      req.user._id,
+      user.oldPass,
+      user.newPass,
+    );
   }
 
   @UseGuards(JwtAuthGuard)

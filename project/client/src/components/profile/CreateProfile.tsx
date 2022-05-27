@@ -1,6 +1,6 @@
 /* eslint-disable no-template-curly-in-string */
 import React, { useEffect, useState } from "react";
-import { Button, DatePicker, Form, Input, Select } from "antd";
+import { Button, DatePicker, Form, Input, InputNumber, Select } from "antd";
 import styled from "styled-components";
 import { Profile } from "../../api/type/profile";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
@@ -13,6 +13,12 @@ import {
 } from "../../redux/reducers/profile.reducer";
 import { toast } from "react-toastify";
 import UploadImage from "../upload/UploadImg";
+import {
+  dataRank,
+  dataSalary,
+  dataType,
+  dataWorkingForm,
+} from "../../config/data";
 
 const { Option } = Select;
 
@@ -39,6 +45,11 @@ const Wrapper = styled.div`
   h1 {
     text-align: center;
     padding: 30px 0;
+    font-size: 50px;
+    font-style: oblique;
+    padding-bottom: 30px;
+    color: rgb(4, 54, 153);
+    margin: 0;
   }
 `;
 const CreateProfile: React.FC = () => {
@@ -50,11 +61,21 @@ const CreateProfile: React.FC = () => {
   const messageProfile = useAppSelector(profileSelectors.isMessageSelector);
 
   const onFinish = ({
-    degree,
     email,
     experience,
     gender,
-    hobby,
+    address,
+    branch,
+    branchWant,
+    endDay,
+    firstDay,
+    language,
+    marry,
+    rank,
+    salary,
+    workForm,
+    birthday,
+    schoolName,
     name,
     phone,
     imgUrl,
@@ -65,12 +86,21 @@ const CreateProfile: React.FC = () => {
     dispatch(
       createProfileAction({
         birthday,
-        degree,
         email,
         experience,
         imgUrl,
+        address,
+        branch,
+        branchWant,
+        endDay,
+        firstDay,
+        language,
+        marry,
+        rank,
+        schoolName,
+        salary,
+        workForm,
         gender,
-        hobby,
         name,
         phone,
         skill,
@@ -99,83 +129,251 @@ const CreateProfile: React.FC = () => {
 
   return (
     <Wrapper>
-      <h1>Tạo hồ sơ cá nhân</h1>
+      <h1>Tạo hồ sơ xin việc</h1>
       <Form
         name="nest-messages"
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 8 }}
+        labelCol={{ span: 11 }}
+        wrapperCol={{ span: 12 }}
         onFinish={onFinish}
         autoComplete="off"
-        style={{ marginTop: "30px" }}
+        style={{ marginTop: "30px", display: "flex", flexDirection: "column" }}
         validateMessages={validateMessages}
       >
-        <Form.Item name="gender" label="Giới tính" rules={[{ required: true }]}>
-          <Select placeholder="Hãy chọn giới tính" allowClear>
-            <Option value="Nam">Nam</Option>
-            <Option value="Nữ">Nữ</Option>
-          </Select>
-        </Form.Item>
-        <Form.Item
-          label="Họ và tên"
-          name="name"
-          rules={[
-            {
-              required: true,
-              type: "string",
-              min: 3,
-              max: 25,
-            },
-          ]}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+          }}
         >
-          <Input />
-        </Form.Item>
+          <div>
+            <h3 style={{ textAlign: "center", color: "#da6500" }}>
+              Thông tin cá nhân
+            </h3>
+            <Form.Item
+              label="Ảnh thẻ hồ sơ"
+              name="imgUrl"
+            >
+              <UploadImage imageUrl={imageUrl!} setImageUrl={setImageUrl} />
+            </Form.Item>
+            <Form.Item
+              label="Họ và tên"
+              name="name"
+              rules={[
+                {
+                  required: true,
+                  type: "string",
+                  min: 3,
+                  max: 25,
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name="gender"
+              label="Giới tính"
+              rules={[{ required: true }]}
+            >
+              <Select placeholder="Hãy chọn giới tính" allowClear>
+                <Option value="Nam">Nam</Option>
+                <Option value="Nữ">Nữ</Option>
+              </Select>
+            </Form.Item>
+            <Form.Item
+              name="marry"
+              label="Tình trạng hôn nhân "
+              rules={[{ required: true }]}
+            >
+              <Select placeholder="Hãy chọn tình trạng hôn nhân" allowClear>
+                <Option value="Độc thân">Độc thân</Option>
+                <Option value="Đã kết hôn">Đã kết hôn</Option>
+              </Select>
+            </Form.Item>
+            <Form.Item
+              label="Ngày sinh"
+              name="birthday"
+              rules={[{ required: true }]}
+            >
+              <DatePicker
+                placeholder="dd/mm/yyyy"
+                format={"DD/MM/YYYY"}
+                onChange={onChange}
+              />
+            </Form.Item>
+            <h3 style={{ textAlign: "center", color: "#da6500" }}>
+              Thông tin liên hệ
+            </h3>
+            <Form.Item
+              label="Số điện thoại"
+              name="phone"
+              rules={[{ required: true, type: "string", len: 10 }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Địa chỉ"
+              name="address"
+              rules={[{ required: true }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="E-mail"
+              name="email"
+              rules={[{ required: true, type: "email" }]}
+            >
+              <Input />
+            </Form.Item>
+          </div>
+          <div
+          // style={{ display: "flex", flexDirection: "column", width: "50%" }}
+          >
+            <h3 style={{ textAlign: "center", color: "#da6500" }}>
+              Học vấn/Ngoại ngữ
+            </h3>
+            <Form.Item
+              label="Thời gian bắt đầu"
+              name="firstDay"
+              rules={[{ required: true }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Thời gian kết thúc"
+              name="endDay"
+              rules={[{ required: true }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Tên trường"
+              name="schoolName"
+              rules={[{ required: true }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Ngành học"
+              name="branch"
+              rules={[{ required: true }]}
+            >
+              <Select placeholder="Hãy chọn ngành học" allowClear>
+                {dataType.map((item, index) => {
+                  return (
+                    <Option value={item.type} key={index}>
+                      {item.name}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+            <Form.Item
+              label="Ngoại ngữ"
+              name="language"
+              rules={[{ required: true }]}
+            >
+              <Input />
+            </Form.Item>
+            <h3 style={{ textAlign: "center", color: "#da6500" }}>
+              Học vấn/Ngoại ngữ
+            </h3>
+            <Form.Item
+              label="Số năm kinh nghiệm"
+              name="experience"
+              rules={[{ required: true }]}
+            >
+              <InputNumber />
+            </Form.Item>
+            <Form.Item
+              label="Kỹ năng"
+              name="skill"
+              rules={[{ required: true }]}
+            >
+              <Input.TextArea />
+            </Form.Item>
+          </div>
+          <div>
+            <h3 style={{ textAlign: "center", color: "#da6500" }}>Mục tiêu</h3>
+            <Form.Item
+              label="Vị trí mong muốn"
+              name="hobby"
+              rules={[{ required: true }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Mức lương mong muốn"
+              name="salary"
+              rules={[{ required: true }]}
+            >
+              <Select placeholder="Hãy chọn mức lương" allowClear>
+                {dataSalary.map((item, index) => {
+                  return (
+                    <Option value={item.salary} key={index}>
+                      {item.name}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+            <Form.Item
+              label="Cấp bậc mong muốn"
+              name="rank"
+              rules={[{ required: true }]}
+            >
+              <Select placeholder="Hãy chọn cấp bậc" allowClear>
+                {dataRank.map((item, index) => {
+                  return (
+                    <Option value={item.rank} key={index}>
+                      {item.name}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+            <Form.Item
+              label="Loại công việc"
+              name="workForm"
+              rules={[{ required: true }]}
+            >
+              <Select placeholder="Hãy chọn loại công việc" allowClear>
+                {dataWorkingForm.map((item, index) => {
+                  return (
+                    <Option value={item.typeWork} key={index}>
+                      {item.name}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+            <Form.Item
+              label="Ngành nghề mong muốn"
+              name="branchWant"
+              rules={[{ required: true }]}
+            >
+              <Select placeholder="Hãy chọn ngành" allowClear>
+                {dataType.map((item, index) => {
+                  return (
+                    <Option value={item.type} key={index}>
+                      {item.name}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+            <Form.Item
+              label="Mục tiêu nghề nghiệp"
+              name="target"
+              rules={[{ required: true }]}
+            >
+              <Input.TextArea />
+            </Form.Item>
+          </div>
+        </div>
         <Form.Item
-          label="Email"
-          name="email"
-          rules={[{ required: true, type: "email" }]}
+          wrapperCol={{ offset: 8, span: 8 }}
+          style={{ display: "flex", justifyContent: "center" }}
         >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          label="Ngày sinh"
-          name="birthday"
-          rules={[{ required: true }]}
-        >
-          <DatePicker placeholder="dd/mm/yyyy" format={"DD/MM/YYYY"} onChange={onChange} />
-        </Form.Item>
-        <Form.Item
-          label="Số điện thoại"
-          name="phone"
-          rules={[{ required: true, type: "string", len: 10 }]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item label="Học vấn" name="degree" rules={[{ required: true }]}>
-          <Input />
-        </Form.Item>
-        <Form.Item
-          label="Kinh nghiệm"
-          name="experience"
-          rules={[{ required: true }]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item label="Kỹ năng" name="skill" rules={[{ required: true }]}>
-          <Input />
-        </Form.Item>
-        <Form.Item label="Sở thích" name="hobby" rules={[{ required: true }]}>
-          <Input />
-        </Form.Item>
-        <Form.Item label="Mục tiêu" name="target" rules={[{ required: true }]}>
-          <Input />
-        </Form.Item>
-        <Form.Item
-          label="Hình ảnh"
-          name="imgUrl"
-        >
-          <UploadImage imageUrl={imageUrl!} setImageUrl={setImageUrl} />
-        </Form.Item>
-        <Form.Item wrapperCol={{ offset: 8, span: 8 }}>
           <Button type="primary" htmlType="submit">
             Tạo
           </Button>

@@ -24,8 +24,12 @@ const Wrapper = styled.div`
   padding: 0 30px 50px 30px;
   background-color: #f0f0f0;
   h1 {
-    text-align: center;
-    padding: 30px 0;
+      font-size: 50px;
+  text-align: center;
+  font-style: oblique;
+  padding-bottom: 30px;
+  color: rgb(4, 54, 153);
+  margin: 0;
   }
 `;
 

@@ -10,12 +10,7 @@ export class Account {
 
   @Prop({
     type: String,
-    unique: true,
     required: true,
-    lowercase: true,
-    trim: true,
-    min: 3,
-    max: 25,
   })
   userName: string;
 
@@ -25,6 +20,12 @@ export class Account {
     min: 6,
   })
   passWord: string;
+
+  @Prop({
+    type: String,
+    required: true,
+  })
+  imgUrl: string;
 
   @Prop({
     type: String,
