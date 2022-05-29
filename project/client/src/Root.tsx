@@ -28,13 +28,13 @@ function Root() {
         {children}
         <ToastContainer
           position="bottom-right"
-          autoClose={4000}
+          autoClose={1000}
           hideProgressBar={false}
           newestOnTop={false}
           closeOnClick
           rtl={false}
           pauseOnFocusLoss
-          // limit={1}
+          limit={3}
           draggable
           pauseOnHover
         />

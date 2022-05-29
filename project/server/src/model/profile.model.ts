@@ -48,11 +48,10 @@ export class Profile {
   schoolName: string;
 
   @Prop({
-    type: String,
     required: true,
-    enum: Type,
+    default: null,
   })
-  branch: string;
+  branch: Type;
 
   @Prop({
     type: String,
@@ -61,10 +60,10 @@ export class Profile {
   language: string;
 
   @Prop({
-    type: String,
+    type: Number,
     required: true,
   })
-  experience: string;
+  experience: number;
 
   @Prop({
     type: String,
@@ -94,31 +93,27 @@ export class Profile {
 
   @Prop({
     required: true,
-    type: String,
-    enum: Salary,
+    default: null,
   })
-  salary: string;
+  salary: Salary;
 
   @Prop({
     required: true,
-    type: String,
-    enum: Rank,
+    default: null,
   })
-  rank: string;
+  rank: Rank;
 
   @Prop({
     required: true,
-    type: String,
-    enum: WorkingForm,
+    default: null,
   })
-  workForm: string;
+  workForm: WorkingForm;
 
   @Prop({
     required: true,
-    type: String,
-    enum: Type,
+    default: null,
   })
-  branchWant: string;
+  branchWant: Type;
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Account' })
   account: Types.ObjectId;

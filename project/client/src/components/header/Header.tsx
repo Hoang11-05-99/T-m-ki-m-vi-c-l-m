@@ -111,7 +111,6 @@ const Test = () => {
   const navigate = useNavigate();
   const [isShowIcon, setIsShowIcon] = useState(false);
   const account = useAppSelector(authSelectors.getAccountSelector);
-  console.log(account);
   
   const content = (
     <DropDown>

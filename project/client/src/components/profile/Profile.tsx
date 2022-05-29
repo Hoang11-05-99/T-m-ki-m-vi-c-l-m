@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   DeleteOutlined,
   EditOutlined,
@@ -5,14 +6,11 @@ import {
 } from "@ant-design/icons";
 import React, { useLayoutEffect } from "react";
 import styled from "styled-components";
-import img from "../../asset/bgr3.png";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { useNavigate } from "react-router-dom";
 import {
   profileSelectors,
-  setStatusProfile,
 } from "../../redux/reducers/profile.reducer";
 import { getProfileAction } from "../../redux/action/profile";
 import {
@@ -223,7 +221,6 @@ const Warning = styled.h1`
 `;
 const Profile: React.FC = () => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const profile = useAppSelector(profileSelectors.getProfileSelector);
 
   useLayoutEffect(() => {
@@ -296,7 +293,7 @@ const Profile: React.FC = () => {
                             marginLeft: "5px",
                           }}
                         >
-                          {profile.birthday}
+                          {moment(profile.birthday).format("DD/MM/YYYY")}
                         </Text>
                       </Text>
                     </div>
@@ -403,7 +400,7 @@ const Profile: React.FC = () => {
             <div style={{ display: "block" }}>
               <BoxFooter>
                 Cập nhật lần cuối:{" "}
-                {moment(profile.createdAt).format("DD/MM/YYYY - H:mm:SS A")}
+                {moment(profile.createdAt).format("DD/MM/YYYY")}
               </BoxFooter>
             </div>
           </LeftBlock>

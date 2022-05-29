@@ -55,7 +55,9 @@ const Wrapper = styled.div`
 const CreateProfile: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [birthday, setDate] = React.useState("");
+  const [dateOfBirth, setDateOfBirth] = React.useState("");
+  const [timeStart, setTimeStart] = React.useState("");
+  const [timeEnd, setTimeEnd] = React.useState("");
   const [imageUrl, setImageUrl] = useState("");
   const status = useAppSelector(profileSelectors.isStatusSelector);
   const messageProfile = useAppSelector(profileSelectors.isMessageSelector);
@@ -83,6 +85,9 @@ const CreateProfile: React.FC = () => {
     target,
   }: Profile) => {
     imgUrl = imageUrl;
+    birthday = dateOfBirth;
+    firstDay = timeStart;
+    endDay = timeEnd;
     dispatch(
       createProfileAction({
         birthday,
@@ -112,7 +117,9 @@ const CreateProfile: React.FC = () => {
     }, 2500);
   };
   function onChange(date: any, dateString: string) {
-    setDate(dateString);
+    setDateOfBirth(dateString);
+    setTimeStart(dateString);
+    setTimeEnd(dateString);
   }
 
   useEffect(() => {
@@ -149,10 +156,7 @@ const CreateProfile: React.FC = () => {
             <h3 style={{ textAlign: "center", color: "#da6500" }}>
               Thông tin cá nhân
             </h3>
-            <Form.Item
-              label="Ảnh thẻ hồ sơ"
-              name="imgUrl"
-            >
+            <Form.Item label="Ảnh thẻ hồ sơ" name="imgUrl">
               <UploadImage imageUrl={imageUrl!} setImageUrl={setImageUrl} />
             </Form.Item>
             <Form.Item
@@ -225,9 +229,7 @@ const CreateProfile: React.FC = () => {
               <Input />
             </Form.Item>
           </div>
-          <div
-          // style={{ display: "flex", flexDirection: "column", width: "50%" }}
-          >
+          <div>
             <h3 style={{ textAlign: "center", color: "#da6500" }}>
               Học vấn/Ngoại ngữ
             </h3>
@@ -236,14 +238,24 @@ const CreateProfile: React.FC = () => {
               name="firstDay"
               rules={[{ required: true }]}
             >
-              <Input />
+              {/* <Input /> */}
+              <DatePicker
+                placeholder="dd/mm/yyyy"
+                format={"DD/MM/YYYY"}
+                onChange={onChange}
+              />
             </Form.Item>
             <Form.Item
               label="Thời gian kết thúc"
               name="endDay"
               rules={[{ required: true }]}
             >
-              <Input />
+              {/* <Input /> */}
+              <DatePicker
+                placeholder="dd/mm/yyyy"
+                format={"DD/MM/YYYY"}
+                onChange={onChange}
+              />
             </Form.Item>
             <Form.Item
               label="Tên trường"
