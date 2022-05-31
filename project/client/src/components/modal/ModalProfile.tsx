@@ -1,15 +1,14 @@
-import {
-  BankOutlined,
-  ContactsOutlined,
-  DollarCircleOutlined,
-  FileDoneOutlined,
-  LineChartOutlined,
-  SmileOutlined,
-} from "@ant-design/icons";
-import { Avatar, Button, Modal } from "antd";
+import { Button, Modal } from "antd";
+import moment from "moment";
 import React from "react";
 import styled from "styled-components";
 import { Profile } from "../../api/type/profile";
+import {
+  checkRank,
+  checkSalary,
+  checkType,
+  checkWorkingForm,
+} from "../../config/data";
 
 interface Props {
   profile: Profile;
@@ -17,89 +16,95 @@ interface Props {
   setIsShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Block = styled.div`
-  display: flex;
-  flex-direction: column;
-  border: 0.125rem solid rgba(0, 0, 0, 0.125);
-  border-radius: 15px;
-`;
-const TitleBlock = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border-bottom: 0.125rem solid rgba(0, 0, 0, 0.125);
-  padding: 0 20px 30px 20px;
-  & p {
-    margin: 0;
-    font-size: 1rem;
-    text-transform: uppercase;
-    font-weight: 700;
-  }
-`;
-const ContentBlock = styled.div`
-  display: flex;
-  justify-content: space-between;
-  padding: 30px 20px;
-  background-color: #fff;
-  background-clip: border-box;
-  border-bottom: 0.125rem solid rgba(0, 0, 0, 0.125);
+const LeftBlock = styled.div`
+  padding: 60px;
+  background: #fff;
+  box-shadow: 0 0 2px 1px rgb(0 0 0 / 12%);
+  border-radius: 6px;
+  margin: 0 20px;
 `;
 
-const FooterBlock = styled.div`
-  display: flex;
-  justify-content: space-between;
-  padding: 30px 20px;
-  background-color: #fff;
-  background-clip: border-box;
-  border-bottom-left-radius: 15px;
-  border-bottom-right-radius: 15px;
-`;
-const Box = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 30%;
-`;
-const ContentBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 30px 30px 10px 30px;
-  & p {
-    margin: 0;
-    font-size: 1rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
-`;
-const Description = styled.div`
-  display: flex;
-`;
-const LeftDescription = styled.div`
-  display: flex;
-  flex-direction: column;
-  & p {
-    font-size: 13px;
-    font-weight: 700;
-    margin: 0;
-    white-space: nowrap;
-  }
-`;
-const RightDescription = styled.div`
-  display: flex;
-  flex-direction: column;
-  & p {
-    font-size: 13px;
-    padding-left: 10px;
-    margin: 0;
-  }
+const Image = styled.img`
+  width: 145px;
+  border: 1px solid #d7d7db;
+  height: 145px;
+  max-width: 150px;
+  max-height: 150px;
+  object-fit: contain;
+  margin-right: 30px;
+  border-radius: 5px;
+  vertical-align: middle;
 `;
 
-const TextDescription = styled.p`
-  font-size: 13px;
-  margin: 0;
+const Text = styled.span`
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #0e1225;
+  text-align: left;
+  white-space: pre-line;
+  margin-bottom: 0;
+  word-break: break-word !important;
+  word-wrap: break-word !important;
+`;
+const BoxTitle = styled.div`
+  font-size: 18px;
+  border-top: 1px solid #d7d7db;
+  padding-top: 0.625rem;
+  color: #da6500;
+  text-align: left;
+  margin-bottom: 0.625rem;
+  font-weight: 700;
+`;
+const BoxContent = styled.div`
+  margin: 0px 0px 20px 0px;
+  white-space: pre-line;
+`;
+const Content = styled.div`
+  margin-bottom: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -15px;
+  margin-left: -15px;
+`;
+const ContentLeft = styled.div`
+  flex: 0 0 27%;
+  max-width: 27%;
+  font-size: 1rem;
+  text-align: right;
+  line-height: 1.2;
+  padding-right: 0px !important;
+  color: #0a587c;
+  width: 100% !important;
+  padding: 0 15px;
+  font-weight: bold;
+  white-space: nowrap;
+`;
+const ContentRight = styled.div`
+  flex: 0 0 73%;
+  max-width: 73%;
+  margin-top: -3px;
+  padding-left: 8px !important;
+  width: 100% !important;
+  padding: 0 15px;
+  white-space: pre-line;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.5;
+  color: #0e1225;
+  text-align: left;
+`;
+const BoxFooter = styled.span`
+  color: #000d2c;
+  font-weight: bold;
+  font-style: italic;
+  padding-top: 1.5rem;
+  justify-content: flex-end !important;
+  display: flex !important;
+  border-top: 1px solid #d7d7db !important;
+  font-size: 1rem;
+  line-height: 1.5;
+  text-align: left;
 `;
 const ModalProfile: React.FC<Props> = ({
   isShowModal,
@@ -113,84 +118,165 @@ const ModalProfile: React.FC<Props> = ({
     <Modal
       visible={isShowModal}
       onCancel={handleCancel}
-      bodyStyle={{ width: "100%" }}
-      footer={[<Button onClick={handleCancel} type="primary">Đóng</Button>]}
+      width={1100}
+      footer={[
+        <Button onClick={handleCancel} type="primary">
+          Đóng
+        </Button>,
+      ]}
     >
-      <Block>
-        <TitleBlock>
-          <Avatar size={64} src={profile.imgUrl} />
-          <p>{profile?.name}</p>
-        </TitleBlock>
-        <ContentBlock>
-          <Box>
-            <ContentBox>
-              <ContactsOutlined style={{ fontSize: "30px" }} />
-              <p>Thông tin</p>
-            </ContentBox>
-            <Description>
-              <LeftDescription>
-                <p>Giới tính</p>
-                <p>Ngày sinh</p>
-                <p>E-mail</p>
-                <p>Điện thoại</p>
-              </LeftDescription>
-              <RightDescription>
-                <p>{profile?.gender}</p>
-                <p>{profile?.birthday}</p>
-                <p>{profile?.email}</p>
-                <p>{profile?.phone}</p>
-              </RightDescription>
-            </Description>
-          </Box>
-          <Box>
-            <ContentBox>
-              <LineChartOutlined style={{ fontSize: "30px" }} />
-              <p>kỹ năng</p>
-            </ContentBox>
-            <Description>
-              <TextDescription>{profile?.skill}</TextDescription>
-            </Description>
-          </Box>
-          <Box>
-            <ContentBox>
-              <SmileOutlined style={{ fontSize: "30px" }} />
-              <p>sở thích</p>
-            </ContentBox>
-            <Description>
-              {/* <TextDescription>{profile?.hobby}</TextDescription> */}
-            </Description>
-          </Box>
-        </ContentBlock>
-        <FooterBlock>
-          <Box>
-            <ContentBox>
-              <BankOutlined style={{ fontSize: "30px" }} />
-              <p>Học vấn</p>
-            </ContentBox>
-            <Description>
-              {/* <TextDescription>{profile?.degree}</TextDescription> */}
-            </Description>
-          </Box>
-          <Box>
-            <ContentBox>
-              <FileDoneOutlined style={{ fontSize: "30px" }} />
-              <p>Kinh nghiệm</p>
-            </ContentBox>
-            <Description>
-              <TextDescription>{profile?.experience}</TextDescription>
-            </Description>
-          </Box>
-          <Box>
-            <ContentBox>
-              <DollarCircleOutlined style={{ fontSize: "30px" }} />
-              <p>Mục tiêu</p>
-            </ContentBox>
-            <Description>
-              <TextDescription>{profile?.target}</TextDescription>
-            </Description>
-          </Box>
-        </FooterBlock>
-      </Block>
+      <LeftBlock id="table">
+        <div>
+          <div style={{ margin: "0 0 20px 0", whiteSpace: "pre-line" }}>
+            <div style={{ display: "flex", alignItems: "flex-start" }}>
+              <div style={{ boxSizing: "border-box" }}>
+                <Image src={profile.imgUrl} />
+              </div>
+              <div style={{ flex: "1" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    color: "#000D2C",
+                    fontWeight: "600",
+                    fontSize: "35px",
+                    marginBottom: "18px",
+                  }}
+                >
+                  {profile.name}
+                </div>
+                <Text>Hồ sơ xin việc</Text>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text>
+                    Giới tính:
+                    <Text
+                      style={{
+                        color: "#000D2C",
+                        fontWeight: "bold",
+                        marginLeft: "5px",
+                      }}
+                    >
+                      {profile.gender}
+                    </Text>
+                  </Text>
+                  <Text>
+                    Ngày sinh:
+                    <Text
+                      style={{
+                        color: "#000D2C",
+                        fontWeight: "bold",
+                        marginLeft: "5px",
+                      }}
+                    >
+                      {profile.birthday}
+                    </Text>
+                  </Text>
+                </div>
+                <Text>
+                  Tình trạng hôn nhân:
+                  <Text
+                    style={{
+                      color: "#000D2C",
+                      fontWeight: "bold",
+                      marginLeft: "5px",
+                    }}
+                  >
+                    {profile.marry}
+                  </Text>
+                </Text>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style={{ display: "block" }}>
+          <BoxTitle>Thông tin liên hệ</BoxTitle>
+          <BoxContent>
+            <Content>
+              <ContentLeft>Địa chỉ:</ContentLeft>
+              <ContentRight>{profile.address}</ContentRight>
+            </Content>
+            <Content>
+              <ContentLeft>Điện thoại:</ContentLeft>
+              <ContentRight>{profile.phone}</ContentRight>
+            </Content>
+            <Content>
+              <ContentLeft>E-mail:</ContentLeft>
+              <ContentRight>{profile.email}</ContentRight>
+            </Content>
+          </BoxContent>
+        </div>
+        <div style={{ display: "block" }}>
+          <BoxTitle>Học vấn/Ngoại ngữ</BoxTitle>
+          <BoxContent>
+            <Content>
+              <ContentLeft>
+                {profile.firstDay} - {profile.endDay}:
+              </ContentLeft>
+              <ContentRight>{profile.schoolName}</ContentRight>
+            </Content>
+            <Content>
+              <ContentLeft>Ngành:</ContentLeft>
+              <ContentRight>{checkType(profile.branch)}</ContentRight>
+            </Content>
+            <Content>
+              <ContentLeft>Ngoại ngữ:</ContentLeft>
+              <ContentRight>{profile.language}</ContentRight>
+            </Content>
+          </BoxContent>
+        </div>
+        <div style={{ display: "block" }}>
+          <BoxTitle>Kinh nghiệm làm việc</BoxTitle>
+          <BoxContent>
+            <Content>
+              <ContentLeft>Số năm kinh nghiệm:</ContentLeft>
+              <ContentRight>{profile.experience}</ContentRight>
+            </Content>
+          </BoxContent>
+        </div>
+        <div style={{ display: "block" }}>
+          <BoxTitle>Kỹ năng</BoxTitle>
+          <BoxContent>
+            <Content>
+              <ContentLeft />
+              <ContentRight>{profile.skill}</ContentRight>
+            </Content>
+          </BoxContent>
+        </div>
+        <div style={{ display: "block" }}>
+          <BoxTitle>Mục tiêu</BoxTitle>
+          <BoxContent>
+            <Content>
+              <ContentLeft>Mức lương mong muốn:</ContentLeft>
+              <ContentRight>{checkSalary(profile.salary)}</ContentRight>
+            </Content>
+            <Content>
+              <ContentLeft>Cấp bậc mong muốn:</ContentLeft>
+              <ContentRight>{checkRank(profile.rank)}</ContentRight>
+            </Content>
+            <Content>
+              <ContentLeft>Loại công việc:</ContentLeft>
+              <ContentRight>{checkWorkingForm(profile.workForm)}</ContentRight>
+            </Content>
+            <Content>
+              <ContentLeft>Ngành nghề mong muốn:</ContentLeft>
+              <ContentRight>{checkType(profile.branchWant)}</ContentRight>
+            </Content>
+            <Content>
+              <ContentLeft>Mục tiêu nghề nghiệp:</ContentLeft>
+              <ContentRight>{profile.target}</ContentRight>
+            </Content>
+          </BoxContent>
+        </div>
+        <div style={{ display: "block" }}>
+          <BoxFooter>
+            Cập nhật lần cuối: {moment(profile.createdAt).format("DD/MM/YYYY")}
+          </BoxFooter>
+        </div>
+      </LeftBlock>
     </Modal>
   );
 };

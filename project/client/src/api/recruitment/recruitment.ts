@@ -7,11 +7,13 @@ import {
 } from "../type/recruitment";
 
 export const createRecruitmentApi = async ({
-  email,
   address,
   description,
   phone,
   imgUrl,
+  deadline,
+  degree,
+  gender,
   salary,
   title,
   type,
@@ -24,12 +26,14 @@ export const createRecruitmentApi = async ({
   const data = await postApi<Recruitment, IRecruitmentResponse>(
     `/recruitment/create`,
     {
-      email,
       address,
       description,
       phone,
       salary,
       imgUrl,
+      deadline,
+      degree,
+      gender,
       title,
       contact,
       type,
@@ -78,7 +82,9 @@ export const getAllRecruitmentApi = async () => {
 };
 
 export const getAllRecruitmentNotAcceptApi = async () => {
-  const data = await getApi<IRecruitmentArrayResponse>(`/recruitment/getAllNotAccept`);
+  const data = await getApi<IRecruitmentArrayResponse>(
+    `/recruitment/getAllNotAccept`
+  );
   return data;
 };
 
@@ -88,5 +94,3 @@ export const getAllRecruitmentCreatorApi = async () => {
   );
   return data;
 };
-
-

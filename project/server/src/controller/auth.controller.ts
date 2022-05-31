@@ -1,7 +1,7 @@
-import { MailerService } from '@nestjs-modules/mailer';
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Post,
   Query,
@@ -15,10 +15,7 @@ import { AuthService } from 'src/service/auth.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private authService: AuthService,
-    private mailService: MailerService,
-  ) {}
+  constructor(private authService: AuthService) {}
 
   @Post('register')
   register(@Body() user: CreateAccountDTO) {
@@ -41,9 +38,25 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Post('updateAccount')
+  updateAccount(
+    @Req() req,
+    @Body() user: CreateAccountDTO,
+    @Query('id') id: string,
+  ) {
+    return this.authService.updateAccount(req.user.role, id, user);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get('getAccount')
   getAccount(@Req() req) {
     return this.authService.getAccount(req.user._id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('getAccountByAdmin')
+  getAccountByAdmin(@Req() req, @Query('id') id: string) {
+    return this.authService.getAccountByAdmin(req.user.role, id);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -58,14 +71,9 @@ export class AuthController {
     return this.authService.updateStatusAccount(req.user.role, id);
   }
 
-  @Get('sendEmail')
-  async send(@Query('email') email) {
-    await this.mailService.sendMail({
-      to: email,
-      from: 'hoangk58cntt@gmail.com',
-      subject: 'Simple Plain Text',
-      text: 'Welcome to nestjs email demo',
-    });
-    return 'ok';
+  @UseGuards(JwtAuthGuard)
+  @Delete('deleteAccount')
+  deleteAccount(@Req() req, @Query('id') id: string) {
+    return this.authService.deleteAccount(req.user.role, id);
   }
 }

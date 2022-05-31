@@ -115,10 +115,12 @@ export class RecruitmentService {
             HttpStatus.OK,
           );
         }
+        const findAccount = await this.accountModel.findOne({ _id: userId });
         const recruitment = await new this.recruitmentModel({
           ...newRecruitment,
           writer: userId,
           status: Status['Chưa phê duyệt'],
+          imgUrl: findAccount.imgUrl,
         }).save();
         const recruitmentObject = recruitment.toObject();
         throw new HttpException(
@@ -245,10 +247,9 @@ export class RecruitmentService {
     }
   }
 
-  async deleteRecruitment(userId: string, id: string) {
+  async deleteRecruitment(id: string) {
     const findRecruitment = await this.recruitmentModel.findOne({
       _id: id,
-      writer: userId,
     });
     if (!findRecruitment) {
       throw new HttpException(

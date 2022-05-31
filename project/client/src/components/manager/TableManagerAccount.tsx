@@ -1,18 +1,22 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable array-callback-return */
-import { CheckCircleOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import { Button } from "antd";
 import moment from "moment";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 import { Role } from "../../api/type/auth";
-import { updateStatusAction } from "../../redux/action/auth";
+import {
+  deleteAccountAction,
+  updateStatusAction,
+} from "../../redux/action/auth";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import {
   authSelectors,
   setMessageAuth,
   setStatusAuth,
+  setUpdateAccountAuth,
 } from "../../redux/reducers/auth.reducer";
 import {
   setMessageRecruitment,
@@ -51,6 +55,7 @@ const headers = [
 
 const TableManagerAccount = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   let currenPage = 1;
   const [perpage] = useState(4);
   const [start, setStart] = useState(0);
@@ -90,53 +95,71 @@ const TableManagerAccount = () => {
             if (index >= start && index < end) {
               return (
                 <StyledTr key={index}>
-                  {item.role === Role.ADMIN ? null : (
-                    <>
-                      <StyledTd>{index + 1}</StyledTd>
-                      <StyledTd>{item.userName}</StyledTd>
-                      <StyledTd>
-                        {moment(item.createdAt).format(
-                          "DD/MM/YYYY - H:mm:SS A"
-                        )}
-                      </StyledTd>
-                      {item.role === Role.CANDIDATE ? (
-                        <StyledTd>Ứng viên</StyledTd>
-                      ) : item.role === Role.RECRUITER ? (
-                        <StyledTd>Nhà tuyển dụng</StyledTd>
-                      ) : null}
-                      <StyledTd>
-                        {item.status ? (
-                          <Button
-                            type="primary"
-                            danger
-                            style={{
-                              marginRight: "10px",
-                            }}
-                            onClick={() => {
-                              dispatch(updateStatusAction(item._id));
-                            }}
-                          >
-                            <MinusCircleOutlined />
-                            Khóa tài khoản
-                          </Button>
-                        ) : (
-                          <Button
-                            type="primary"
-                            style={{
-                              marginRight: "10px",
-                              backgroundColor: "#00b14f",
-                            }}
-                            onClick={() => {
-                              dispatch(updateStatusAction(item._id));
-                            }}
-                          >
-                            <CheckCircleOutlined />
-                            Mở khóa tài khoản
-                          </Button>
-                        )}
-                      </StyledTd>
-                    </>
-                  )}
+                  <>
+                    <StyledTd>{index + 1}</StyledTd>
+                    <StyledTd>{item.userName}</StyledTd>
+                    <StyledTd>
+                      {moment(item.createdAt).format("DD/MM/YYYY - H:mm:SS A")}
+                    </StyledTd>
+                    {item.role === Role.CANDIDATE ? (
+                      <StyledTd>Ứng viên</StyledTd>
+                    ) : item.role === Role.RECRUITER ? (
+                      <StyledTd>Nhà tuyển dụng</StyledTd>
+                    ) : null}
+                    <StyledTd>
+                      {item.status ? (
+                        <Button
+                          type="primary"
+                          style={{
+                            marginRight: "10px",
+                          }}
+                          onClick={() => {
+                            dispatch(updateStatusAction(item._id!));
+                          }}
+                        >
+                          Khóa
+                        </Button>
+                      ) : (
+                        <Button
+                          type="primary"
+                          style={{
+                            marginRight: "10px",
+                            backgroundColor: "#00b14f",
+                          }}
+                          onClick={() => {
+                            dispatch(updateStatusAction(item._id!));
+                          }}
+                        >
+                          Mở khóa
+                        </Button>
+                      )}
+                      <Button
+                        type="primary"
+                        style={{
+                          backgroundColor: "#00b14f",
+                          marginRight: "10px",
+                        }}
+                        onClick={() => {
+                          navigate(`/account/update/${item._id}`);
+                          dispatch(setUpdateAccountAuth());
+                        }}
+                      >
+                        Sửa
+                      </Button>
+                      <Button
+                        type="primary"
+                        danger
+                        style={{
+                          marginRight: "10px",
+                        }}
+                        onClick={() => {
+                          dispatch(deleteAccountAction(item._id!));
+                        }}
+                      >
+                        Xóa
+                      </Button>
+                    </StyledTd>
+                  </>
                 </StyledTr>
               );
             }

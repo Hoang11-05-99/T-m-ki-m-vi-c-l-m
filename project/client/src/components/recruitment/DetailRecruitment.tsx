@@ -187,7 +187,7 @@ const DetailRecruitment: React.FC = () => {
           <CompanyTitle>{recruitment?.contact}</CompanyTitle>
           <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
             <ClockCircleOutlined style={{ fontSize: "18px" }} />
-            <span>Hạn nộp hồ sơ :</span>
+            <span>Hạn nộp hồ sơ :{recruitment?.deadline}</span>
           </div>
         </BoxInfoJob>
         {account?.role === Role.CANDIDATE ? (

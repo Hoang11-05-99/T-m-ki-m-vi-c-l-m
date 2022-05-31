@@ -126,4 +126,30 @@ export class ProfileService {
       );
     }
   }
+  async deleteProfile(userId: string, id: string) {
+    const findProfile = await this.profileModel.findOne({
+      _id: id,
+      account: userId,
+    });
+    if (!findProfile) {
+      throw new HttpException(
+        {
+          result: null,
+          status: HttpStatus.BAD_REQUEST,
+          message: 'Không tìm thấy hồ sơ xin việc',
+        },
+        HttpStatus.OK,
+      );
+    } else {
+      const profileObject = await this.profileModel.findByIdAndRemove(id);
+      throw new HttpException(
+        {
+          result: profileObject,
+          status: HttpStatus.OK,
+          message: 'Xóa hồ sơ xin việc thành công',
+        },
+        HttpStatus.OK,
+      );
+    }
+  }
 }

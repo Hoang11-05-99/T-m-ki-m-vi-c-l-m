@@ -26,6 +26,7 @@ export class Profile {
 
   @Prop({
     type: String,
+    required: true,
   })
   phone: string;
 

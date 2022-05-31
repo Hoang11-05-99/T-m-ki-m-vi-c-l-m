@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-template-curly-in-string */
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Button, Form, Input, Select } from "antd";
 import styled from "styled-components";
 import { useAppDispatch } from "../../redux/hooks";
@@ -13,7 +13,6 @@ import {
   setMessageRecruitment,
   setStatusRecruitment,
 } from "../../redux/reducers/recruitment.reducer";
-import UploadImage from "../upload/UploadImg";
 import { toast } from "react-toastify";
 
 const { Option } = Select;
@@ -24,12 +23,12 @@ const Wrapper = styled.div`
   padding: 0 30px 50px 30px;
   background-color: #f0f0f0;
   h1 {
-      font-size: 50px;
-  text-align: center;
-  font-style: oblique;
-  padding-bottom: 30px;
-  color: rgb(4, 54, 153);
-  margin: 0;
+    font-size: 50px;
+    text-align: center;
+    font-style: oblique;
+    padding-bottom: 30px;
+    color: rgb(4, 54, 153);
+    margin: 0;
   }
 `;
 
@@ -54,16 +53,16 @@ const CreateRecruitment: React.FC = () => {
   const messageRecruitment = useSelector(
     recruitmentSelectors.isMessageSelector
   );
-  const [imageUrl, setImageUrl] = useState("");
 
   const onFinish = async ({
     address,
     description,
-    email,
     phone,
     salary,
     title,
-    imgUrl,
+    deadline,
+    degree,
+    gender,
     contact,
     type,
     quantity,
@@ -72,15 +71,15 @@ const CreateRecruitment: React.FC = () => {
     workingForm,
   }: Recruitment) => {
     try {
-      imgUrl = imageUrl;
       await dispatch(
         createRecuitmentAction({
           address,
           description,
-          email,
           phone,
+          deadline,
+          degree,
+          gender,
           salary,
-          imgUrl,
           title,
           type,
           contact,
@@ -139,6 +138,15 @@ const CreateRecruitment: React.FC = () => {
           ]}
         >
           <Input.TextArea />
+        </Form.Item>
+        <Form.Item name="gender" label="Giới tính" rules={[{ required: true }]}>
+          <Select placeholder="Hãy chọn giới tính" allowClear>
+            <Option value="Nam">Nam</Option>
+            <Option value="Nữ">Nữ</Option>
+          </Select>
+        </Form.Item>
+        <Form.Item name="degree" label="Học vấn" rules={[{ required: true }]}>
+          <Input />
         </Form.Item>
         <Form.Item
           name="quantity"
@@ -245,21 +253,18 @@ const CreateRecruitment: React.FC = () => {
           <Input />
         </Form.Item>
         <Form.Item
-          label="Email"
-          name="email"
-          rules={[{ required: true, type: "email" }]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          label="Người liên hệ"
+          label="Tên công ty"
           name="contact"
           rules={[{ required: true, type: "string", min: 10, max: 99 }]}
         >
           <Input />
         </Form.Item>
-        <Form.Item label="Hình ảnh" name="imgUrl">
-          <UploadImage imageUrl={imageUrl!} setImageUrl={setImageUrl} />
+        <Form.Item
+          label="Hạn nạp hồ sơ"
+          name="deadline"
+          rules={[{ required: true }]}
+        >
+          <Input placeholder="dd/mm/yy" />
         </Form.Item>
         <Form.Item wrapperCol={{ offset: 8, span: 8 }}>
           <Button type="primary" htmlType="submit">

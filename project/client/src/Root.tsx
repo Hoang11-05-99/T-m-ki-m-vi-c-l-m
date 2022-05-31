@@ -19,6 +19,8 @@ import Header from "./components/header/Header";
 import ManagerRecruitment from "./components/manager/ManagerRecruitment";
 import ManagerAccount from "./components/manager/ManagerAccount";
 import UpdatePass from "./components/updatePass/UpdatePass";
+import CreateAccountByAdmin from "./components/manager/CreateAccountByAdmin";
+import UpdateAccountByAdmin from "./components/manager/UpdateAccountByAdmin";
 
 function Root() {
   function App({ children }: any) {
@@ -85,7 +87,7 @@ function Root() {
         }
       />
       <Route
-        path="/profile/createProfile"
+        path="/profile/create"
         element={
           <App>
             <CreateProfile />
@@ -93,7 +95,7 @@ function Root() {
         }
       />
       <Route
-        path="/profile/updateProfile"
+        path="/profile/update"
         element={
           <App>
             <UpdateProfile />
@@ -161,6 +163,22 @@ function Root() {
         element={
           <App>
             <ManagerAccount />
+          </App>
+        }
+      />
+      <Route
+        path="/account/create"
+        element={
+          <App>
+            <CreateAccountByAdmin />
+          </App>
+        }
+      />
+      <Route
+        path="/account/update/:id"
+        element={
+          <App>
+            <UpdateAccountByAdmin />
           </App>
         }
       />

@@ -128,6 +128,7 @@ const TableRecruitment = ({
                         Xóa
                       </Button>
                       <ModalDeleteRecruitment
+                        recruitment={item}
                         isShowModal={isShowModal}
                         setIsShowModal={setIsShowModal}
                       />

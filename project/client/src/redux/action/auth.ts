@@ -1,13 +1,17 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
+  deleteAccountApi,
   getAccountApi,
+  getAccountByAdminApi,
   getAllAccountApi,
   loginApi,
   RegisterApi,
+  updateAccountApi,
   updatePassApi,
   updateStatusAccountApi,
 } from "../../api/auth/auth";
 import {
+  Account,
   IAuthRequest,
   IAuthResponse,
   IAuthUpdatePass,
@@ -47,6 +51,22 @@ export const getAccountAction = createAsyncThunk(
   }
 );
 
+export const getAccountByAdminAction = createAsyncThunk(
+  "auth/getAccountByAdmin",
+  async (id: string) => {
+    const response = { ...(await getAccountByAdminApi(id)) };
+    return response;
+  }
+);
+
+export const updateAccountAction = createAsyncThunk(
+  "auth/updateAccount",
+  async (data: Account) => {
+    const response = { ...(await updateAccountApi(data)) };
+    return response;
+  }
+);
+
 export const updateStatusAction = createAsyncThunk(
   "auth/updateStatus",
   async (id: string) => {
@@ -59,6 +79,14 @@ export const getAllAccountAction = createAsyncThunk(
   "auth/getAllAccount",
   async () => {
     const response = { ...(await getAllAccountApi()) };
+    return response;
+  }
+);
+
+export const deleteAccountAction = createAsyncThunk(
+  "auth/deleteAccount",
+  async (id: string) => {
+    const response = { ...(await deleteAccountApi(id)) };
     return response;
   }
 );

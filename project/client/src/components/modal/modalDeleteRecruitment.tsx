@@ -1,15 +1,15 @@
 import { Modal } from "antd";
 import React from "react";
-import { useSelector } from "react-redux";
 import styled from "styled-components";
+import { Recruitment } from "../../api/type/recruitment";
 import { deleteRecuitmentAction } from "../../redux/action/recruitment";
 import { useAppDispatch } from "../../redux/hooks";
 import {
-  recruitmentSelectors,
   setStatusRecruitment,
 } from "../../redux/reducers/recruitment.reducer";
 
 interface Props {
+  recruitment: Recruitment;
   isShowModal: boolean;
   setIsShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -20,14 +20,13 @@ const Title = styled.h2`
 `;
 const ModalDeleteRecruitment: React.FC<Props> = ({
   isShowModal,
+  recruitment,
   setIsShowModal,
 }) => {
   const dispatch = useAppDispatch();
-  const recruitment = useSelector(recruitmentSelectors.getRecruitmentSelector);
   const handleOk = () => {
     dispatch(deleteRecuitmentAction(recruitment?._id!));
     setIsShowModal(false);
-
     dispatch(setStatusRecruitment());
   };
 

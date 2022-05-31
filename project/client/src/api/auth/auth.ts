@@ -1,4 +1,4 @@
-import { getApi, postApi } from "../../untils/apiHelper";
+import { deleteApi, getApi, postApi, putApi } from "../../untils/apiHelper";
 import {
   IAuthRequest,
   IAuthResponse,
@@ -14,6 +14,28 @@ export const loginApi = async ({ email, passWord }: IAuthRequest) => {
     email,
     passWord,
   });
+  return data;
+};
+
+export const updateAccountApi = async ({
+  _id,
+  email,
+  passWord,
+  imgUrl,
+  role,
+  userName,
+}: IRegisterRequest) => {
+  const data = await putApi<IRegisterRequest, IRegisterResponse>(
+    `/auth/updateAccount?id=${_id}`,
+    {
+      _id,
+      email,
+      passWord,
+      imgUrl,
+      role,
+      userName,
+    }
+  );
   return data;
 };
 
@@ -53,6 +75,13 @@ export const getAccountApi = async () => {
   return data;
 };
 
+export const getAccountByAdminApi = async (id: string) => {
+  const data = await getApi<IGetAccountResponse>(
+    `/auth/getAccountByAdmin?id=${id}`
+  );
+  return data;
+};
+
 export const getAllAccountApi = async () => {
   const data = await getApi<IGetAllAccountResponse>(`/auth/getAllAccount`);
   return data;
@@ -61,6 +90,13 @@ export const getAllAccountApi = async () => {
 export const updateStatusAccountApi = async (id: string) => {
   const data = await getApi<IGetAccountResponse>(
     `/auth/updateStatusAccount?id=${id}`
+  );
+  return data;
+};
+
+export const deleteAccountApi = async (id: string) => {
+  const data = await deleteApi<IGetAccountResponse>(
+    `/auth/deleteAccount?id=${id}`
   );
   return data;
 };

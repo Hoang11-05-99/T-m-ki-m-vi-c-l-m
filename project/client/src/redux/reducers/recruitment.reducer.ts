@@ -114,10 +114,17 @@ const recruitmentSlice = createSlice({
             recruitment.address = action.payload.result.address;
             recruitment.description = action.payload.result.description;
             recruitment.title = action.payload.result.title;
-            recruitment.email = action.payload.result.email;
             recruitment.phone = action.payload.result.phone;
+            recruitment.rank = action.payload.result.rank;
             recruitment.salary = action.payload.result.salary;
+            recruitment.quantity = action.payload.result.quantity;
             recruitment.type = action.payload.result.type;
+            recruitment.contact = action.payload.result.contact;
+            recruitment.workExperience = action.payload.result.workExperience;
+            recruitment.workingForm = action.payload.result.workingForm;
+            recruitment.gender = action.payload.result.gender;
+            recruitment.degree = action.payload.result.degree;
+            recruitment.deadline = action.payload.result.deadline;
           }
           return recruitment;
         });

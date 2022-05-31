@@ -18,5 +18,6 @@ import { CVController } from 'src/controller/cv.controller';
   ],
   providers: [CVService, JwtStrategy, RolesGuard],
   controllers: [CVController],
+  exports: [MongooseModule.forFeature([{ name: CV.name, schema: CVSchema }])],
 })
 export class CVModule {}

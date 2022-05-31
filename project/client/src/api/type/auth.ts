@@ -11,6 +11,7 @@ export interface IAuthUpdatePass {
 }
 
 export interface IRegisterRequest {
+  _id?: string;
   email: string;
   userName: string;
   passWord: string;
@@ -35,13 +36,13 @@ export interface IGetAllAccountResponse extends IResponse {
 }
 
 export interface Account {
-  _id: string;
+  _id?: string;
   email: string;
   userName: string;
   passWord: string;
   imgUrl: string;
   role: Role;
-  status: boolean;
+  status?: boolean;
   createdAt?: Date;
 }
 

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-template-curly-in-string */
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 import { Button, Form, Input, Select } from "antd";
 import styled from "styled-components";
 import { useAppDispatch } from "../../redux/hooks";
@@ -16,7 +16,6 @@ import {
   setMessageRecruitment,
   setStatusRecruitment,
 } from "../../redux/reducers/recruitment.reducer";
-import UploadImage from "../upload/UploadImg";
 import { toast } from "react-toastify";
 
 const { Option } = Select;
@@ -46,7 +45,6 @@ const UpdateRecruitment: React.FC = () => {
   const navigate = useNavigate();
   let params = useParams();
   const recruitment = useSelector(recruitmentSelectors.getRecruitmentSelector);
-  const [imageUrl, setImageUrl] = useState(recruitment?.imgUrl!);
   const status = useSelector(recruitmentSelectors.isStatusSelector);
   const message = useSelector(recruitmentSelectors.isMessageSelector);
 
@@ -55,8 +53,9 @@ const UpdateRecruitment: React.FC = () => {
       address: props.address,
       contact: props.contact,
       description: props.description,
-      imgUrl: imageUrl,
-      email: props.email,
+      deadline: props.deadline,
+      gender: props.gender,
+      degree: props.degree,
       phone: props.phone,
       salary: props.salary,
       title: props.title,
@@ -72,14 +71,6 @@ const UpdateRecruitment: React.FC = () => {
         updateRecruitment: newRecruitment,
       })
     );
-    setTimeout(() => {
-      if (status === 200) {
-        navigate("/recruitment/myRecruitment");
-      } else {
-        dispatch(setStatusRecruitment());
-        console.log(message);
-      }
-    }, 1000);
   };
 
   useEffect(() => {
@@ -97,7 +88,6 @@ const UpdateRecruitment: React.FC = () => {
   }, [status]);
 
   useLayoutEffect(() => {
-    dispatch(setStatusRecruitment());
     dispatch(getRecuitmentAction(params.id!));
   }, []);
   return (
@@ -118,13 +108,14 @@ const UpdateRecruitment: React.FC = () => {
           { name: "address", value: recruitment?.address },
           { name: "type", value: recruitment?.type },
           { name: "phone", value: recruitment?.phone },
-          { name: "email", value: recruitment?.email },
           { name: "contact", value: recruitment?.contact },
+          { name: "deadline", value: recruitment?.deadline },
+          { name: "degree", value: recruitment?.degree },
+          { name: "gender", value: recruitment?.gender },
           { name: "quantity", value: recruitment?.quantity },
           { name: "rank", value: recruitment?.rank },
           { name: "workingForm", value: recruitment?.workingForm },
           { name: "workExperience", value: recruitment?.workExperience },
-          { name: "imgUrl", value: recruitment?.imgUrl },
         ]}
       >
         <Form.Item
@@ -145,6 +136,15 @@ const UpdateRecruitment: React.FC = () => {
           ]}
         >
           <Input.TextArea />
+        </Form.Item>
+        <Form.Item name="gender" label="Giới tính" rules={[{ required: true }]}>
+          <Select placeholder="Hãy chọn giới tính" allowClear>
+            <Option value="Nam">Nam</Option>
+            <Option value="Nữ">Nữ</Option>
+          </Select>
+        </Form.Item>
+        <Form.Item name="degree" label="Học vấn" rules={[{ required: true }]}>
+          <Input />
         </Form.Item>
         <Form.Item
           name="quantity"
@@ -251,21 +251,18 @@ const UpdateRecruitment: React.FC = () => {
           <Input />
         </Form.Item>
         <Form.Item
-          label="Email"
-          name="email"
-          rules={[{ required: true, type: "email" }]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          label="Người liên hệ"
+          label="Tên công ty"
           name="contact"
           rules={[{ required: true, type: "string", min: 10, max: 99 }]}
         >
           <Input />
         </Form.Item>
-        <Form.Item style={{ justifyContent: "center" }} name="imgUrl">
-          <UploadImage imageUrl={imageUrl!} setImageUrl={setImageUrl} />
+        <Form.Item
+          label="Hạn nạp hồ sơ"
+          name="deadline"
+          rules={[{ required: true }]}
+        >
+          <Input placeholder="dd/mm/yy" />
         </Form.Item>
         <Form.Item wrapperCol={{ offset: 8, span: 8 }}>
           <Button type="primary" htmlType="submit">

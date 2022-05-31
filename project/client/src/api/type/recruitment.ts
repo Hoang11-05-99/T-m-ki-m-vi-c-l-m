@@ -1,4 +1,5 @@
 import { IResponse } from "./IResponse";
+import { Sex } from "./profile";
 
 export interface IRecruitmentRequest {
   id: string;
@@ -7,10 +8,9 @@ export interface IRecruitmentRequest {
 
 export interface Recruitment {
   _id?: string;
-  email: string;
   phone: string;
   salary: Salary;
-  imgUrl: string;
+  imgUrl?: string;
   address: Address;
   type: Type;
   workingForm: WorkingForm;
@@ -18,6 +18,9 @@ export interface Recruitment {
   workExperience: WorkExperience;
   quantity: string;
   contact: string;
+  deadline: string;
+  gender: Sex;
+  degree: string;
   title: string;
   description: string;
   writer?: any;

@@ -6,14 +6,17 @@ import { Account, AccountDocument } from 'src/model/account.model';
 import * as bcrypt from 'bcrypt';
 import { CreateAccountDTO } from 'src/dto/createAccountDto';
 import { Role } from 'src/constant/enum';
-import { MailerService } from '@nestjs-modules/mailer';
+import { Recruitment, RecruitmentDocument } from 'src/model/recruitment.model';
+import { CV, CVDocument } from 'src/model/cv.model';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(Account.name) private accountModel: Model<AccountDocument>,
+    @InjectModel(CV.name) private cvModel: Model<CVDocument>,
+    @InjectModel(Recruitment.name)
+    private recuitmentModel: Model<RecruitmentDocument>,
     private jwtService: JwtService,
-    private mailService: MailerService,
   ) {}
 
   async hashPassword(password: string): Promise<string> {
@@ -22,7 +25,9 @@ export class AuthService {
 
   async getAllAccount(role: Role) {
     if (role === Role.ADMIN) {
-      const findAll = await this.accountModel.find();
+      const findAll = await this.accountModel.find({
+        $nor: [{ role: Role.ADMIN }],
+      });
       throw new HttpException(
         {
           result: findAll,
@@ -104,6 +109,42 @@ export class AuthService {
           result: null,
           status: HttpStatus.BAD_REQUEST,
           message: 'Tài khoản không tồn tại',
+        },
+        HttpStatus.OK,
+      );
+    }
+  }
+
+  async getAccountByAdmin(role: string, id: string) {
+    if (role === Role.ADMIN) {
+      const findAccount = await this.accountModel.findOne({
+        _id: id,
+      });
+      if (findAccount) {
+        throw new HttpException(
+          {
+            result: findAccount,
+            status: HttpStatus.OK,
+            message: 'Tải thông tin tài khoản thành công',
+          },
+          HttpStatus.OK,
+        );
+      } else {
+        throw new HttpException(
+          {
+            result: null,
+            status: HttpStatus.BAD_REQUEST,
+            message: 'Tài khoản không tồn tại',
+          },
+          HttpStatus.OK,
+        );
+      }
+    } else {
+      throw new HttpException(
+        {
+          result: null,
+          status: HttpStatus.FORBIDDEN,
+          message: 'Tài khoản không có chức năng này',
         },
         HttpStatus.OK,
       );
@@ -252,20 +293,73 @@ export class AuthService {
     }
   }
 
-  async send(email: string) {
-    await this.mailService.sendMail({
-      to: email,
-      from: 'hoangk58cntt@gmail.com',
-      subject: 'Verify Account',
-      text: 'Ok',
-    });
-    throw new HttpException(
-      {
-        result: null,
-        status: HttpStatus.OK,
-        message: 'Gửi thành công',
-      },
-      HttpStatus.OK,
-    );
+  async deleteAccount(role: string, id: string) {
+    if (role === Role.ADMIN) {
+      await this.recuitmentModel.remove({ writer: id });
+      await this.cvModel.remove({ receiver: id });
+      const accountObject = await this.accountModel.findByIdAndRemove(id);
+      throw new HttpException(
+        {
+          result: accountObject,
+          status: HttpStatus.OK,
+          message: 'Xóa tài khoản thành công',
+        },
+        HttpStatus.OK,
+      );
+    } else {
+      throw new HttpException(
+        {
+          result: null,
+          status: HttpStatus.FORBIDDEN,
+          message: 'Tài khoản không có chức năng này',
+        },
+        HttpStatus.OK,
+      );
+    }
+  }
+
+  async updateAccount(role: Role, id: string, newAccount: CreateAccountDTO) {
+    if (role === Role.ADMIN) {
+      const findAccount = await this.accountModel.findOne({ _id: id });
+      const hashedPassword = await this.hashPassword(newAccount.passWord);
+
+      if (findAccount) {
+        await this.accountModel.updateOne(
+          { account: id },
+          { ...newAccount, updateAt: new Date(), passWord: hashedPassword },
+          {
+            new: true,
+          },
+        );
+        throw new HttpException(
+          {
+            result: await this.accountModel.findOne({
+              _id: findAccount._id,
+            }),
+            status: HttpStatus.OK,
+            message: 'Cập nhật tài khoản thành công',
+          },
+          HttpStatus.OK,
+        );
+      } else {
+        throw new HttpException(
+          {
+            result: null,
+            status: HttpStatus.NOT_FOUND,
+            message: 'Không tìm thấy tài khoản!!!',
+          },
+          HttpStatus.OK,
+        );
+      }
+    } else {
+      throw new HttpException(
+        {
+          result: null,
+          status: HttpStatus.FORBIDDEN,
+          message: 'Tài khoản không có chức năng này',
+        },
+        HttpStatus.OK,
+      );
+    }
   }
 }

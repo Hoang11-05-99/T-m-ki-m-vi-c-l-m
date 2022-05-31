@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-template-curly-in-string */
 import React, { useEffect, useState } from "react";
-import { Button, DatePicker, Form, Input, InputNumber, Select } from "antd";
+import { Button, Form, Input, InputNumber, Select } from "antd";
 import styled from "styled-components";
 import { Profile } from "../../api/type/profile";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
@@ -55,9 +56,6 @@ const Wrapper = styled.div`
 const CreateProfile: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [dateOfBirth, setDateOfBirth] = React.useState("");
-  const [timeStart, setTimeStart] = React.useState("");
-  const [timeEnd, setTimeEnd] = React.useState("");
   const [imageUrl, setImageUrl] = useState("");
   const status = useAppSelector(profileSelectors.isStatusSelector);
   const messageProfile = useAppSelector(profileSelectors.isMessageSelector);
@@ -85,9 +83,6 @@ const CreateProfile: React.FC = () => {
     target,
   }: Profile) => {
     imgUrl = imageUrl;
-    birthday = dateOfBirth;
-    firstDay = timeStart;
-    endDay = timeEnd;
     dispatch(
       createProfileAction({
         birthday,
@@ -116,11 +111,6 @@ const CreateProfile: React.FC = () => {
       navigate("/profile");
     }, 2500);
   };
-  function onChange(date: any, dateString: string) {
-    setDateOfBirth(dateString);
-    setTimeStart(dateString);
-    setTimeEnd(dateString);
-  }
 
   useEffect(() => {
     if (status === 200) {
@@ -131,8 +121,12 @@ const CreateProfile: React.FC = () => {
       toast.error(messageProfile);
       dispatch(setStatusProfile());
       dispatch(setMessageProfile());
+    } else if (status === 500) {
+      toast.warning(messageProfile);
+      dispatch(setStatusProfile());
+      dispatch(setMessageProfile());
     }
-  });
+  }, [status]);
 
   return (
     <Wrapper>
@@ -198,11 +192,7 @@ const CreateProfile: React.FC = () => {
               name="birthday"
               rules={[{ required: true }]}
             >
-              <DatePicker
-                placeholder="dd/mm/yyyy"
-                format={"DD/MM/YYYY"}
-                onChange={onChange}
-              />
+              <Input placeholder="dd/mm/yyyy" />
             </Form.Item>
             <h3 style={{ textAlign: "center", color: "#da6500" }}>
               Thông tin liên hệ
@@ -238,24 +228,14 @@ const CreateProfile: React.FC = () => {
               name="firstDay"
               rules={[{ required: true }]}
             >
-              {/* <Input /> */}
-              <DatePicker
-                placeholder="dd/mm/yyyy"
-                format={"DD/MM/YYYY"}
-                onChange={onChange}
-              />
+              <Input placeholder="mm/yyyy" />
             </Form.Item>
             <Form.Item
               label="Thời gian kết thúc"
               name="endDay"
               rules={[{ required: true }]}
             >
-              {/* <Input /> */}
-              <DatePicker
-                placeholder="dd/mm/yyyy"
-                format={"DD/MM/YYYY"}
-                onChange={onChange}
-              />
+              <Input placeholder="mm/yyyy" />
             </Form.Item>
             <Form.Item
               label="Tên trường"
@@ -306,13 +286,6 @@ const CreateProfile: React.FC = () => {
           </div>
           <div>
             <h3 style={{ textAlign: "center", color: "#da6500" }}>Mục tiêu</h3>
-            <Form.Item
-              label="Vị trí mong muốn"
-              name="hobby"
-              rules={[{ required: true }]}
-            >
-              <Input />
-            </Form.Item>
             <Form.Item
               label="Mức lương mong muốn"
               name="salary"

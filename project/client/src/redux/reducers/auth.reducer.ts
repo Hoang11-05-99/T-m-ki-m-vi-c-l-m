@@ -1,10 +1,13 @@
 import { createSelector, createSlice } from "@reduxjs/toolkit";
 import { setAccessToken } from "../../untils/localStorageService";
 import {
+  deleteAccountAction,
   getAccountAction,
+  getAccountByAdminAction,
   getAllAccountAction,
   loginAction,
   registerAction,
+  updateAccountAction,
   updatePassAction,
   updateStatusAction,
 } from "../action/auth";
@@ -16,6 +19,7 @@ const initialState: IAuthState = {
   loading: false,
   token: null,
   account: null,
+  updateAccount: null,
   accounts: null,
   status: null,
   message: null,
@@ -40,6 +44,9 @@ const authSlice = createSlice({
     },
     setAccountAuth: (state) => {
       state.account = null;
+    },
+    setUpdateAccountAuth: (state) => {
+      state.updateAccount = null;
     },
   },
   extraReducers: (builder) => {
@@ -133,6 +140,51 @@ const authSlice = createSlice({
         state.loading = false;
         state.message = action.payload as string;
       });
+    builder
+      .addCase(deleteAccountAction.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(deleteAccountAction.fulfilled, (state, action) => {
+        state.loading = false;
+        state.status = action.payload.status;
+        state.message = action.payload.message;
+        state.account = action.payload.result;
+        if (action.payload.status === 200) {
+          state.accounts = state.accounts!.filter(
+            (account) => account._id !== action.payload.result._id
+          );
+        }
+      })
+      .addCase(deleteAccountAction.rejected, (state, action) => {
+        state.loading = false;
+        state.message = action.payload as string;
+      });
+    builder
+      .addCase(getAccountByAdminAction.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getAccountByAdminAction.fulfilled, (state, action) => {
+        state.loading = false;
+        state.updateAccount = action.payload.result;
+      })
+      .addCase(getAccountByAdminAction.rejected, (state, action) => {
+        state.loading = false;
+        state.message = action.payload as string;
+      });
+    builder
+      .addCase(updateAccountAction.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateAccountAction.fulfilled, (state, action) => {
+        state.loading = false;
+        state.status = action.payload.status;
+        state.message = action.payload.message;
+        state.updateAccount = action.payload.result;
+      })
+      .addCase(updateAccountAction.rejected, (state, action) => {
+        state.loading = false;
+        state.message = action.payload as string;
+      });
   },
 });
 
@@ -141,6 +193,7 @@ export const {
   setMessageAuth,
   setToken,
   setStatusAuth,
+  setUpdateAccountAuth,
   setAccountAuth,
 } = authSlice.actions;
 
@@ -158,6 +211,10 @@ const isMessageSelector = createSelector(selectSelf, (state) => state.message);
 const getTokenSelector = createSelector(selectSelf, (state) => state.token);
 
 const getAccountSelector = createSelector(selectSelf, (state) => state.account);
+const getUpdateAccountSelector = createSelector(
+  selectSelf,
+  (state) => state.updateAccount
+);
 const getAccountsSelector = createSelector(
   selectSelf,
   (state) => state.accounts
@@ -169,6 +226,7 @@ export const authSelectors = {
   isMessageSelector,
   getAccountSelector,
   getAccountsSelector,
+  getUpdateAccountSelector,
   isStatusSelector,
 };
 

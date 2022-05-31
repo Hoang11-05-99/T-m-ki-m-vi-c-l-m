@@ -1,11 +1,11 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
-  HttpException,
-  HttpStatus,
   Post,
   Put,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -20,59 +20,31 @@ export class ProfileController {
   @UseGuards(JwtAuthGuard)
   @Post('createProfile')
   createProfile(@Req() req, @Body() profile: CreateProfileDTO) {
-    try {
-      return this.profileService.createProfile(
-        req.user.role,
-        req.user._id,
-        profile,
-      );
-    } catch (error) {
-      throw new HttpException(
-        {
-          result: null,
-          status: HttpStatus.INTERNAL_SERVER_ERROR,
-          message: 'Lỗi server !!!',
-        },
-        HttpStatus.OK,
-      );
-    }
+    return this.profileService.createProfile(
+      req.user.role,
+      req.user._id,
+      profile,
+    );
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('getProfile')
   getProfile(@Req() req) {
-    try {
-      return this.profileService.getProfile(req.user.role, req.user._id);
-    } catch (error) {
-      throw new HttpException(
-        {
-          result: null,
-          status: HttpStatus.INTERNAL_SERVER_ERROR,
-          message: 'Lỗi server !!!',
-        },
-        HttpStatus.OK,
-      );
-    }
+    return this.profileService.getProfile(req.user.role, req.user._id);
   }
 
   @UseGuards(JwtAuthGuard)
   @Put('updateProfile')
   updateProfile(@Req() req, @Body() profile: CreateProfileDTO) {
-    try {
-      return this.profileService.updateProfile(
-        req.user.role,
-        req.user._id,
-        profile,
-      );
-    } catch (error) {
-      throw new HttpException(
-        {
-          result: null,
-          status: HttpStatus.INTERNAL_SERVER_ERROR,
-          message: 'Lỗi server !!!',
-        },
-        HttpStatus.OK,
-      );
-    }
+    return this.profileService.updateProfile(
+      req.user.role,
+      req.user._id,
+      profile,
+    );
+  }
+  @UseGuards(JwtAuthGuard)
+  @Delete('delete')
+  deleteProfile(@Req() req, @Query('id') id: string) {
+    return this.profileService.deleteProfile(req.user._id, id);
   }
 }

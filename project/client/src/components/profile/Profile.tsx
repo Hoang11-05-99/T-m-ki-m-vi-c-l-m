@@ -1,17 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {
-  DeleteOutlined,
-  EditOutlined,
-  VerticalAlignBottomOutlined,
-} from "@ant-design/icons";
+import { EditOutlined, VerticalAlignBottomOutlined } from "@ant-design/icons";
 import React, { useLayoutEffect } from "react";
 import styled from "styled-components";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import {
-  profileSelectors,
-} from "../../redux/reducers/profile.reducer";
+import { profileSelectors } from "../../redux/reducers/profile.reducer";
 import { getProfileAction } from "../../redux/action/profile";
 import {
   checkRank,
@@ -20,6 +14,7 @@ import {
   checkWorkingForm,
 } from "../../config/data";
 import moment from "moment";
+import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -87,36 +82,7 @@ const BoxSend = styled.div`
     height: 50px;
   }
 `;
-const BoxDelete = styled.div`
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  white-space: nowrap;
-  font-weight: bold;
-  cursor: pointer;
-  color: #dc3545;
-  text-align: center;
-  vertical-align: middle;
-  user-select: none;
-  background-color: transparent;
-  border: 1px solid transparent;
-  padding: 0.375rem 0.75rem;
-  font-size: 1rem;
-  line-height: 1.5;
-  border-radius: 1rem;
-  :hover {
-    border: 2px solid #dc3545;
-  }
-  div {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #fff;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-  }
-`;
+
 const Image = styled.img`
   width: 145px;
   border: 1px solid #d7d7db;
@@ -221,6 +187,7 @@ const Warning = styled.h1`
 `;
 const Profile: React.FC = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const profile = useAppSelector(profileSelectors.getProfileSelector);
 
   useLayoutEffect(() => {
@@ -232,7 +199,7 @@ const Profile: React.FC = () => {
         <Warning>
           ⚠️ Tài khoản này chưa được tạo hồ sơ, bạn cần tạo một hồ sơ để có thể
           ứng tuyển vào công việc mong muốn. Tạo hồ sơ{" "}
-          <a href="/profile/createProfile">tại đây</a>.
+          <a href="/profile/create">tại đây</a>.
         </Warning>
       </Wrapper>
     );
@@ -259,7 +226,11 @@ const Profile: React.FC = () => {
                       }}
                     >
                       {profile.name}
-                      <Button>
+                      <Button
+                        onClick={() => {
+                          navigate("/profile/update");
+                        }}
+                      >
                         <EditOutlined
                           style={{ fontSize: "25px", color: "#0069DB" }}
                         />
@@ -293,7 +264,7 @@ const Profile: React.FC = () => {
                             marginLeft: "5px",
                           }}
                         >
-                          {moment(profile.birthday).format("DD/MM/YYYY")}
+                          {profile.birthday}
                         </Text>
                       </Text>
                     </div>
@@ -362,17 +333,14 @@ const Profile: React.FC = () => {
               <BoxTitle>Kỹ năng</BoxTitle>
               <BoxContent>
                 <Content>
-                  <ContentLeft>{profile.skill}</ContentLeft>
+                  <ContentLeft />
+                  <ContentRight>{profile.skill}</ContentRight>
                 </Content>
               </BoxContent>
             </div>
             <div style={{ display: "block" }}>
               <BoxTitle>Mục tiêu</BoxTitle>
               <BoxContent>
-                <Content>
-                  <ContentLeft>Vị trí mong muốn:</ContentLeft>
-                  <ContentRight></ContentRight>
-                </Content>
                 <Content>
                   <ContentLeft>Mức lương mong muốn:</ContentLeft>
                   <ContentRight>{checkSalary(profile.salary)}</ContentRight>
@@ -419,14 +387,6 @@ const Profile: React.FC = () => {
               </div>
               Tải về PDF
             </BoxSend>
-            <BoxDelete>
-              <div style={{ marginRight: "10px" }}>
-                <DeleteOutlined
-                  style={{ color: "#dc3545", fontSize: "25px" }}
-                />
-              </div>
-              Xóa hồ sơ cá nhân
-            </BoxDelete>
           </RightBlock>
         </Block>
       </Wrapper>

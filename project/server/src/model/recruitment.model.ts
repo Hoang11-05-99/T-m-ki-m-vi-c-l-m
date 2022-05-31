@@ -18,6 +18,9 @@ export class Recruitment {
   @Prop({ type: String, required: true })
   phone: string;
 
+  @Prop({ type: String, required: true })
+  contact: string;
+
   @Prop({
     type: String,
     required: true,
@@ -72,6 +75,12 @@ export class Recruitment {
     required: true,
   })
   deadline: string;
+  @Prop({
+    type: String,
+    required: true,
+    default: null,
+  })
+  imgUrl: string;
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Account' })
   writer: Types.ObjectId;

@@ -8,10 +8,14 @@ import { RolesGuard } from 'src/guards/roles.guard';
 import { Account, AccountSchema } from 'src/model/account.model';
 import { AuthService } from 'src/service/auth.service';
 import { AuthController } from 'src/controller/auth.controller';
+import { RecruitmentModule } from './recruitment.module';
+import { CVModule } from './cv.module';
 
 @Module({
   imports: [
     PassportModule,
+    RecruitmentModule,
+    CVModule,
     ConfigModule.forRoot(),
     JwtModule.register({
       secret: process.env.JWT_SECRET,

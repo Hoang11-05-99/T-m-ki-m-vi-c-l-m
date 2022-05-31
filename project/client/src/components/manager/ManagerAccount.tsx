@@ -1,5 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {  useLayoutEffect } from "react";
+import { Button } from "antd";
+import { useLayoutEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { getAllAccountAction } from "../../redux/action/auth";
 import { useAppDispatch } from "../../redux/hooks";
@@ -17,6 +19,7 @@ const Wrapper = styled.div`
 `;
 const ManagerAccount = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   useLayoutEffect(() => {
     dispatch(getAllAccountAction());
@@ -25,6 +28,14 @@ const ManagerAccount = () => {
   return (
     <Wrapper>
       <h1>Quản lý tài khoản</h1>
+      <Button
+        type="primary"
+        onClick={() => {
+          navigate("/account/create");
+        }}
+      >
+        Thêm tài khoản
+      </Button>
       <TableManagerAccount />
     </Wrapper>
   );
